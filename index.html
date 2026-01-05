@@ -86,6 +86,21 @@
     .btn-hover {
       @apply hover:shadow-lg hover:scale-105 transition-all duration-300 active:scale-95;
     }
+    /* 修复日期输入框在移动设备上的宽度问题 */
+    input[type="date"] {
+      /* 确保输入框不会超出容器 */
+      max-width: 100%;
+      /* 移除iOS Safari的默认内边距和外观 */
+      -webkit-appearance: none;
+      /* 确保输入框内容不会溢出 */
+      box-sizing: border-box;
+    }
+    /* 确保所有输入元素都正确响应 */
+    .relative > input,
+    .relative > textarea {
+      /* 确保输入元素宽度计算正确 */
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body class="font-sans text-dark min-h-screen">
