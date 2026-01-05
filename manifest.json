@@ -2,7 +2,7 @@
   "name": "NVC自我同理日记",
   "short_name": "NVC日记",
   "description": "非暴力沟通自我同理日记应用，帮助你记录和反思日常沟通中的情绪与需求",
-  "start_url": "/index.html",
+  "start_url": "/NVCDairy/index.html",
   "display": "standalone",
   "background_color": "#F9FAFB",
   "theme_color": "#4F46E5",
