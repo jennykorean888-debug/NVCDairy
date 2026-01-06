@@ -159,6 +159,19 @@
             </div>
           </div>
 
+          <!-- 对象 -->
+          <div class="space-y-2">
+            <label for="object" class="block text-sm font-medium text-gray-700">对象</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fa fa-user text-neutral"></i>
+              </div>
+              <input type="text" id="object" name="object" 
+                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none form-focus bg-gray-50" 
+                placeholder="请输入事件涉及的对象...">
+            </div>
+          </div>
+
           <!-- 我的感受 -->
           <div class="space-y-2">
             <label for="my-feelings" class="block text-sm font-medium text-gray-700">我的感受是？</label>
@@ -405,6 +418,7 @@
             <h4 class="font-medium text-primary">${formattedDate}</h4>
             <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">#${entries.length - index}</span>
           </div>
+          ${entry.object ? `<p class="text-sm text-gray-500 mb-1">对象: <span class="text-gray-700">${entry.object}</span></p>` : ''}
           <p class="text-sm text-gray-600 line-clamp-2 mb-2">${entry.event}</p>
           <div class="flex flex-wrap gap-2">
             <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">感受: ${truncateText(entry.myFeelings, 10)}</span>
@@ -449,6 +463,10 @@
               <p class="text-sm text-gray-500 mb-1">发生了什么？</p>
               <p class="text-sm">${entry.event}</p>
             </div>
+            ${entry.object ? `<div>
+              <p class="text-sm text-gray-500 mb-1">对象</p>
+              <p class="text-sm">${entry.object}</p>
+            </div>` : ''}
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -694,6 +712,7 @@
         id: Date.now(),
         date: dateInput.value,
         event: document.getElementById('event').value,
+        object: document.getElementById('object').value,
         myFeelings: document.getElementById('my-feelings').value,
         myNeeds: document.getElementById('my-needs').value,
         theirFeelings: document.getElementById('their-feelings').value,
