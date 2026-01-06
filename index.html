@@ -298,6 +298,40 @@
             <p id="completion-rate" class="text-2xl font-bold text-orange-500">0%</p>
           </div>
         </div>
+
+        <!-- 感受和需要频次统计 -->
+        <div class="mt-8">
+          <h3 class="text-lg font-semibold mb-4 text-center">感受与需要频次统计</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 感受频次 -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="text-sm font-medium text-gray-600 mb-3 flex items-center">
+                <i class="fa fa-smile-o text-secondary mr-2"></i>
+                高频感受 Top 5
+              </h4>
+              <div id="feelings-frequency" class="space-y-2">
+                <!-- 这里会动态显示高频感受 -->
+                <div class="text-center text-neutral py-4">
+                  <p>暂无数据</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 需要频次 -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="text-sm font-medium text-gray-600 mb-3 flex items-center">
+                <i class="fa fa-star-o text-primary mr-2"></i>
+                高频需要 Top 5
+              </h4>
+              <div id="needs-frequency" class="space-y-2">
+                <!-- 这里会动态显示高频需要 -->
+                <div class="text-center text-neutral py-4">
+                  <p>暂无数据</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- 历史记录预览 -->
@@ -623,6 +657,100 @@
         const totalDays = Math.ceil((lastEntryDate - firstEntryDate) / (1000 * 60 * 60 * 24)) + 1;
         const rate = Math.round((entries.length / totalDays) * 100);
         completionRateEl.textContent = `${Math.min(rate, 100)}%`;
+      }
+
+      // 更新感受和需要频次统计
+      updateFeelingsAndNeedsStats(entries);
+    }
+
+    // 统计并更新感受和需要频次
+    function updateFeelingsAndNeedsStats(entries) {
+      // 统计感受频次
+      const feelingsCount = {};
+      const needsCount = {};
+
+      // 遍历所有条目，统计频次
+      entries.forEach(entry => {
+        // 统计感受
+        if (entry.myFeelings) {
+          // 支持逗号分隔的多个感受
+          const feelings = entry.myFeelings.split(',').map(f => f.trim()).filter(f => f);
+          feelings.forEach(feeling => {
+            feelingsCount[feeling] = (feelingsCount[feeling] || 0) + 1;
+          });
+        }
+
+        // 统计需要
+        if (entry.myNeeds) {
+          // 支持逗号分隔的多个需要
+          const needs = entry.myNeeds.split(',').map(n => n.trim()).filter(n => n);
+          needs.forEach(need => {
+            needsCount[need] = (needsCount[need] || 0) + 1;
+          });
+        }
+      });
+
+      // 排序并获取Top 5
+      const topFeelings = Object.entries(feelingsCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      const topNeeds = Object.entries(needsCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      // 更新感受频次显示
+      const feelingsContainer = document.getElementById('feelings-frequency');
+      if (topFeelings.length > 0) {
+        feelingsContainer.innerHTML = topFeelings.map(([feeling, count], index) => `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-6 h-6 bg-secondary/20 text-secondary rounded-full text-xs mr-2">
+                ${index + 1}
+              </span>
+              <span class="text-sm">${feeling}</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm font-medium text-secondary mr-2">${count}</span>
+              <div class="w-20 bg-gray-200 rounded-full h-2">
+                <div class="bg-secondary h-2 rounded-full" style="width: ${Math.min((count / topFeelings[0][1]) * 100, 100)}%"></div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        feelingsContainer.innerHTML = `
+          <div class="text-center text-neutral py-4">
+            <p>暂无数据</p>
+          </div>
+        `;
+      }
+
+      // 更新需要频次显示
+      const needsContainer = document.getElementById('needs-frequency');
+      if (topNeeds.length > 0) {
+        needsContainer.innerHTML = topNeeds.map(([need, count], index) => `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs mr-2">
+                ${index + 1}
+              </span>
+              <span class="text-sm">${need}</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm font-medium text-primary mr-2">${count}</span>
+              <div class="w-20 bg-gray-200 rounded-full h-2">
+                <div class="bg-primary h-2 rounded-full" style="width: ${Math.min((count / topNeeds[0][1]) * 100, 100)}%"></div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        needsContainer.innerHTML = `
+          <div class="text-center text-neutral py-4">
+            <p>暂无数据</p>
+          </div>
+        `;
       }
     }
 
